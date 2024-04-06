@@ -3,14 +3,14 @@ import { StyleSheet, View, Image } from 'react-native';
 
 import StartButtons from './start-buttons/StartButtons';
 
-const Home: React.FC = () => {
+const Home = ({ navigation }) => {
   return (
     <View style={styles.body}>
       <Image
         source={require('../../../assets/favicon.png')}
         style={styles.logo}
       />
-      <StartButtons />
+      <StartButtons navigation={navigation}/>
     </View>
   );
 };

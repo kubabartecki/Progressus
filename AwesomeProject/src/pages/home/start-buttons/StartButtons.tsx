@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, View} from 'react-native';
 
-import {MyButton} from '../../../components/button/MyButton';
+import {MyButton} from '../../../components/buttons/MyButton';
 
-const StartButtons: React.FC = () => {
+const StartButtons = ({ navigation }) => {
   const startGame = () => {
-    console.log('Game started');
+    navigation.navigate('GamePage');
   };
 
   return (
