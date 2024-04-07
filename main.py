@@ -1,16 +1,9 @@
+import json
+from copy import deepcopy
 from enum import Enum, auto
 from random import randint, choice
-try:
-    import RPi.GPIO as GPIO
-    GPIO.setup(2, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
-    GPIO.setup(3, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
-    GPIO.setup(4, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
-    GPIO.setup(17, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
-except:
-    print("nie działam na raspbercie - dupa z gpio")
 
-
-SIZE = 5
+SIZE = 8
 
 class GameStates(Enum):
     GAME_START = auto()
@@ -23,7 +16,7 @@ class GameStates(Enum):
 
 
 class Buildings(Enum):
-    EMPTY = auto()
+    EMPTY = 0
     CIRCUIT_FACTORY  = auto()
     PARK = auto()
     WINDMILL = auto()
@@ -66,19 +59,7 @@ class GameEvents(Enum):
 
 
 def ReadCard() -> Buildings:
-    try:
-        import RPi.GPIO as GPIO
-        while True:
-            if GPIO.input(2):
-                return Buildings.PARK
-            elif GPIO.input(3):
-                return Buildings.COAL_POWER_PLANT
-            elif GPIO.input(4):
-                return Buildings.DEMOMAN_OFFICE
-            elif GPIO.input(17):
-                return Buildings.SMELTERY
-    except:
-        return Buildings.EMPTY
+    return Buildings.WINDMILL
 
 def ReadPositionX():
     return int(input("Enter X coord"))
@@ -93,7 +74,7 @@ class Game():
 
     nextEvent = GameEvents.NONE
     state = GameStates.GAME_START
-    current_turn = 0
+    turn = 0
     resources = {
         'money' : 0,
         'power' : 0,
@@ -228,6 +209,9 @@ class Game():
         self.resources['steel'] += total_steel_gain
         self.resources['pollution'] += total_pollution_gain
 
+        self.turn += 1
+        
+
     def DrawGame(self):
         for key, value in self.resources.items():
             print(key, ": ", value)
@@ -251,6 +235,21 @@ class Game():
             for i in range(0,SIZE - 2):
                 self.board[i][y] = self.board[i+1][y]
             self.board[SIZE - 1][y] = edgeBuilding
+
+    def ConvertToJSON(self):
+        board = [0 for i in range(SIZE**2)]
+        for i, row in enumerate(self.board):
+            for j, _ in enumerate(row):
+                board[i + j * SIZE] = self.board[i][j].value
+
+        values = {
+                'resources' : self.resources,
+                'board' : board,
+                'turn' : self.turn,
+            }
+
+        return json.dumps(values)
+
 
 
 
