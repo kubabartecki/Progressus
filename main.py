@@ -2,6 +2,19 @@ import json
 from copy import deepcopy
 from enum import Enum, auto
 from random import randint, choice
+from threading import Thread
+
+pins = [27, 22, 23, 24]
+
+try:
+    import RPi.GPIO as GPIO
+    GPIO.setmode(GPIO.BCM)
+    GPIO.setup(pins[0], GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+    GPIO.setup(pins[1], GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+    GPIO.setup(pins[2], GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+    GPIO.setup(pins[3], GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+except:
+    print("nie działam na raspbercie - dupa z gpio")
 
 SIZE = 8
 
@@ -57,9 +70,21 @@ class GameEvents(Enum):
     EPIDEMIC = auto()
     TRAFFIC = auto()
 
-
 def ReadCard() -> Buildings:
-    return Buildings.WINDMILL
+    try:
+        import RPi.GPIO as GPIO
+        while True:
+            if GPIO.input(pins[0]):
+                return Buildings.PARK
+            elif GPIO.input(pins[1]):
+                return Buildings.COAL_POWER_PLANT
+            elif GPIO.input(pins[2]):
+                return Buildings.DEMOMAN_OFFICE
+            elif GPIO.input(pins[3]):
+                return Buildings.SMELTERY
+    except:
+        print("GPIO is dead. Returning empty building...")
+        return Buildings.EMPTY
 
 def ReadPositionX():
     return int(input("Enter X coord"))
@@ -252,9 +277,10 @@ class Game():
 
 
 
+game = Game()
 
-if __name__ == '__main__':
-    game = Game()
+def game_thread():
+    global game
     game.board[0][0] = Buildings.COAL_POWER_PLANT
 
     while True:
@@ -269,4 +295,23 @@ if __name__ == '__main__':
         game.UpdateGameState()
         game.DrawGame()
 
+
+
+import asyncio
+from websockets.server import serve
+
+async def echo(websocket):
+    while True:
+        await websocket.send(game.ConvertToJSON())
+        await asyncio.sleep(1)
+
+async def websocket_task():
+    async with serve(echo, "0.0.0.0", 8765):
+        # await asyncio.Future()  # run forever      
+        await asyncio.get_running_loop().create_future()  #
+
+if __name__ == '__main__':
+    t = Thread(target=game_thread)
+    t.start()
+    asyncio.run(websocket_task())
 
