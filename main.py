@@ -1,4 +1,5 @@
 from enum import Enum, auto
+from random import randint, choice
 
 SIZE = 5
 
@@ -67,6 +68,7 @@ def ReadPositionY():
 
 class Game():
     board = SIZE * [SIZE * [Buildings.EMPTY]]
+    nextEvent = GameEvents.NONE
     state = GameStates.GAME_START
     current_turn = 0
     resources = {
@@ -203,12 +205,21 @@ class Game():
             print(key, ": ", value)
 
 
-def EventRandomize():
-    pass
+    def EventRandomize(self):
+        self.nextEvent = choice(list(GameEvents))
 
+    def EventOccurs(self):
+        if self.nextEvent == GameEvents.NONE:
+            pass
+        elif self.nextEvent == GameEvents.CLEAR_SKY:
+            self.resources['pollution'] -= 1
+        elif self.nextEvent == GameEvents.LANDSLIDE:
+            y = randint(0,SIZE - 1)
+            edgeBuilding = self.board[0][y]
+            for i in range(0,SIZE - 2):
+                self.board[i][y] = self.board[i+1][y]
+            self.board[SIZE - 1][y] = edgeBuilding
 
-def EventOccurs():
-    pass
 
 
 if __name__ == '__main__':
@@ -216,13 +227,13 @@ if __name__ == '__main__':
     game.board[0][0] = Buildings.COAL_POWER_PLANT
 
     while True:
-        EventRandomize()
+        game.EventRandomize()
 
         for i in range(0,2):
             game.Player1Turn()
             game.Player2Turn()
 
-        EventOccurs()
+        game.EventOccurs()
 
         game.UpdateGameState()
         game.DrawGame()
