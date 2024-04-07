@@ -84,6 +84,17 @@ class GameState():
 
     def GetNeighbours(self, x, y, building):
         n = 0
+        for i in range(-1,1):
+            for j in range(-1,1):
+                if i is not x and j is not y:
+                    if self.board[x+i][x+j] == building:
+                        n += 1
+        for i in range(0,7):
+            if self.board[i][y] == SUPPLY_LINE_TRUCK and building == SUPPLY_LINE_TRUCK:
+                n += 1
+        for i in range(0,7):
+            if self.board[x][i] == SUPPLY_LINE_AIRPLANE and building == SUPPLY_LINE_AIRPLANE:
+                n += 1
         return n
 
     
@@ -103,7 +114,7 @@ class GameState():
         elif building == Building.CIRCUIT_FACTORY:
             circuit_gain = 1
             pollution_gain = 1
-            circuit_gain += self.GetNeighbours(x,y,Building.SMELTERY)
+            circuit_gain += self.GetNeighbours(x,y,Building.SMELTERY) + self.GetNeighbours(x,y,Building.SUPPLY_LINE_TRUCK)
 
         elif building == Building.PARK:
             pollution_gain = -3
@@ -112,7 +123,7 @@ class GameState():
             power_gain = 1 + self.GetNeighbours(x,y,Building.EMPTY)
 
         elif building == Building.COAL_POWER_PLANT:
-            power_gain = 1 + self.GetNeighbours(x,y,Building.OIL_RIG)
+            power_gain = 1 + self.GetNeighbours(x,y,Building.OIL_RIG) + self.GetNeighbours(x,y,Building.SUPPLY_LINE_TRUCK)
             pollution_gain = 1
 
         elif building == Building.OIL_RIG:
@@ -124,7 +135,7 @@ class GameState():
             pollution_gain = 1
 
         elif building == Building.SHOP:
-            money_gain = 1 + self.GetNeighbours(x,y,Building.CIRCUIT_FACTORY) + self.GetNeighbours(x,y,Building.SMELTERY)
+            money_gain = 1 + self.GetNeighbours(x,y,Building.CIRCUIT_FACTORY) + self.GetNeighbours(x,y,Building.SMELTERY)+ self.GetNeighbours(x,y,Building.SUPPLY_LINE_TRUCK)
 
         elif building == Building.DEMOMAN_OFFICE:
             pass
