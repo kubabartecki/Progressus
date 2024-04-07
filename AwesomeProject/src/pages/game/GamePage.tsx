@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import {
   StyleSheet,
+  View,
 } from 'react-native';
 import { Drawer } from 'react-native-drawer-layout';
 
 import {DrawerButton} from '../../components/buttons/DrawerButton';
 import MaterialDrawer from './material-drawer/MaterialDrawer';
 import Board from './board/Board';
+import TurnBar from './turn-bar/TurnBar';
 
 const GamePage = () => {
   const [openDrawer, setOpenDrawer] = useState(false);
@@ -16,26 +18,28 @@ const GamePage = () => {
       onOpen={() => setOpenDrawer(true)}
       onClose={() => setOpenDrawer(false)}
       renderDrawerContent={MaterialDrawer}
-      style={styles.a}
+      style={styles.drawer}
     >
       <DrawerButton
         onPress={() => setOpenDrawer((prevOpen) => !prevOpen)}
-        title={`${open ? 'close' : 'open'}`}
+        title={`${openDrawer ? 'close' : 'open'}`}
       />
-      <Board />
+      <View style={styles.container}>
+        <Board />
+        <TurnBar />
+      </View>
     </Drawer>
   );
 };
 
 const styles = StyleSheet.create({
-  a: {
+  drawer: {
     backgroundColor: 'var(--base-color3)',
   },
   container: {
-    flex: 1,
+    display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    padding: 16,
   },
   paragraph: {
     padding: 16,
