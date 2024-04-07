@@ -1,5 +1,14 @@
 from enum import Enum, auto
 from random import randint, choice
+try:
+    import RPi.GPIO as GPIO
+    GPIO.setup(2, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+    GPIO.setup(3, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+    GPIO.setup(4, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+    GPIO.setup(17, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+except:
+    print("nie działam na raspbercie - dupa z gpio")
+
 
 SIZE = 5
 
@@ -57,7 +66,19 @@ class GameEvents(Enum):
 
 
 def ReadCard() -> Buildings:
-    return Buildings.WINDMILL
+    try:
+        import RPi.GPIO as GPIO
+        while True:
+            if GPIO.input(2):
+                return Buildings.PARK
+            elif GPIO.input(3):
+                return Buildings.COAL_POWER_PLANT
+            elif GPIO.input(4):
+                return Buildings.DEMOMAN_OFFICE
+            elif GPIO.input(17):
+                return Buildings.SMELTERY
+    except:
+        return Buildings.EMPTY
 
 def ReadPositionX():
     return int(input("Enter X coord"))
