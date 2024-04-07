@@ -6,6 +6,7 @@ import { Drawer } from 'react-native-drawer-layout';
 
 import {DrawerButton} from '../../components/buttons/DrawerButton';
 import MaterialDrawer from './material-drawer/MaterialDrawer';
+import Board from './board/Board';
 
 const GamePage = () => {
   const [openDrawer, setOpenDrawer] = useState(false);
@@ -21,6 +22,7 @@ const GamePage = () => {
         onPress={() => setOpenDrawer((prevOpen) => !prevOpen)}
         title={`${open ? 'close' : 'open'}`}
       />
+      <Board />
     </Drawer>
   );
 };
