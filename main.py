@@ -9,6 +9,7 @@ class GameStates(Enum):
     PLAYER_2_TURN = auto()
     EVENT_OCCURS = auto()
     UPDATE_GAME_STATE = auto()
+    GAME_OVER = auto()
 
 
 class Buildings(Enum):
@@ -64,16 +65,16 @@ def ReadPositionY():
     return 0
 
 
-class GameState():
+class Game():
     board = SIZE * [SIZE * [Buildings.EMPTY]]
     state = GameStates.GAME_START
     current_turn = 0
     resources = {
-        'circuits' : 0,
+        'money' : 0,
+        'power' : 0,
         'fuel' : 0,
         'steel' : 0,
-        'power' : 0,
-        'money' : 0,
+        'circuits' : 0,
         'pollution' : 0,
     }
 
@@ -112,7 +113,7 @@ class GameState():
         elif building == Buildings.CIRCUIT_FACTORY:
             circuit_gain = 1
             pollution_gain = 1
-            circuit_gain += self.GetNeighbours(x,y,Buildings.SMELTERY) + self.GetNeighbours(x,y,Building.SUPPLY_LINE_TRUCK)
+            circuit_gain += self.GetNeighbours(x,y,Buildings.SMELTERY) + self.GetNeighbours(x,y,Buildings.SUPPLY_LINE_TRUCK)
 
         elif building == Buildings.PARK:
             pollution_gain = -3
@@ -151,12 +152,8 @@ class GameState():
         elif building == Buildings.SUPPLY_LINE_AIRPLANE:
             pollution_gain = 1
 
-        self.resources['circuits'] += circuit_gain
-        self.resources['fuel'] += fuel_gain
-        self.resources['steel'] += steel_gain
-        self.resources['money'] += money_gain
-        self.resources['pollution'] += pollution_gain
-        self.resources['power'] += power_gain
+        return money_gain, power_gain, fuel_gain, circuit_gain, steel_gain, pollution_gain
+
 
     def Player1Turn(self):
         buildingPlayed = ReadCard()
@@ -171,29 +168,46 @@ class GameState():
         buildingY = ReadPositionY()
         self.board[buildingX][buildingY] = buildingPlayed
 
+    def UpdateGameState(self):
+        circuit_gain = 0
+        fuel_gain = 0
+        steel_gain = 0
+        money_gain = 0
+        pollution_gain = 0
+        power_gain = 0
+
+        for x, row in enumerate(self.board):
+            for y, _ in enumerate(row): 
+                 money_gain, power_gain, fuel_gain, circuit_gain, steel_gain, pollution_gain = self.CalculateBuildingGain(x,y)
+                    
+        self.resources['circuits'] += circuit_gain
+        self.resources['fuel'] += fuel_gain
+        self.resources['steel'] += steel_gain
+        self.resources['money'] += money_gain
+        self.resources['pollution'] += pollution_gain
+        self.resources['power'] += power_gain
+
+            
 def EventRandomize():
     pass
+
 
 def EventOccurs():
     pass
 
-def UpdateGameState():
-    pass
 
 if __name__ == '__main__':
-    GAME_STATE = GameState()
-
+    GAME = Game()
 
     while True:
         EventRandomize()
 
         for i in range(0,2):
-            GAME_STATE.Player1Turn()
-
-            GAME_STATE.Player2Turn()
+            GAME.Player1Turn()
+            GAME.Player2Turn()
 
         EventOccurs()
 
-        UpdateGameState()
+        GAME.UpdateGameState()
 
 
