@@ -21,11 +21,10 @@ const styles = StyleSheet.create({
     maxWidth: 50,
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: 12,
-    paddingHorizontal: 12,
+    paddingVertical: 10,
+    paddingHorizontal: 10,
     margin: 10,
     borderRadius: 4,
-    backgroundColor: 'var(--base-color4)',
   },
   icon: {
     fontSize: 18,
