@@ -56,13 +56,13 @@ class GameEvents(Enum):
 
 
 def ReadCard() -> Buildings:
-    return Buildings.EMPTY
+    return Buildings.WINDMILL
 
 def ReadPositionX():
-    return 0
+    return int(input("Enter X coord"))
 
 def ReadPositionY():
-    return 0
+    return int(input("Enter Y coord"))
 
 
 class Game():
@@ -147,8 +147,10 @@ class Game():
 
         elif building == Buildings.LABORATORY:
             pass
+
         elif building == Buildings.SUPPLY_LINE_TRUCK:
             pollution_gain = 1
+
         elif building == Buildings.SUPPLY_LINE_AIRPLANE:
             pollution_gain = 1
 
@@ -156,6 +158,7 @@ class Game():
 
 
     def Player1Turn(self):
+        print("Player 1")
         buildingPlayed = ReadCard()
         buildingX = ReadPositionX()
         buildingY = ReadPositionY()
@@ -163,10 +166,12 @@ class Game():
 
 
     def Player2Turn(self):
+        print("Player 2")
         buildingPlayed = ReadCard()
         buildingX = ReadPositionX()
         buildingY = ReadPositionY()
         self.board[buildingX][buildingY] = buildingPlayed
+
 
     def UpdateGameState(self):
         total_circuit_gain = 0
@@ -197,7 +202,7 @@ class Game():
         for key, value in self.resources.items():
             print(key, ": ", value)
 
-            
+
 def EventRandomize():
     pass
 
@@ -206,14 +211,12 @@ def EventOccurs():
     pass
 
 
-
-
 if __name__ == '__main__':
     game = Game()
     game.board[0][0] = Buildings.COAL_POWER_PLANT
 
     while True:
-        # EventRandomize()
+        EventRandomize()
 
         for i in range(0,2):
             game.Player1Turn()
