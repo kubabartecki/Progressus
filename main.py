@@ -1,7 +1,4 @@
-import json
 from enum import Enum, auto
-from os import get_inheritable
-from types import BuiltinMethodType
 
 SIZE = 5
 
@@ -57,8 +54,18 @@ class GameEvents(Enum):
     TRAFFIC = auto()
 
 
+def ReadCard() -> Buildings:
+    return Buildings.EMPTY
+
+def ReadPositionX():
+    return 0
+
+def ReadPositionY():
+    return 0
+
+
 class GameState():
-    board = [SIZE * [SIZE * [Buildings.EMPTY]]] 
+    board = SIZE * [SIZE * [Buildings.EMPTY]]
     state = GameStates.GAME_START
     current_turn = 0
     resources = {
@@ -75,8 +82,17 @@ class GameState():
 
     def GetNeighbours(self, x, y, building):
         n = 0
-        for i in range(3):
-            pass
+        for i in range(-1,1):
+            for j in range(-1,1):
+                if i is not x and j is not y:
+                    if self.board[x+i][x+j] == building:
+                        n += 1
+        for i in range(0,SIZE-1):
+            if self.board[i][y] == Buildings.SUPPLY_LINE_TRUCK and building == Buildings.SUPPLY_LINE_TRUCK:
+                n += 1
+        for i in range(0,SIZE-1):
+            if self.board[x][i] == Buildings.SUPPLY_LINE_AIRPLANE and building == Buildings.SUPPLY_LINE_AIRPLANE:
+                n += 1
         return n
 
     
@@ -96,7 +112,7 @@ class GameState():
         elif building == Buildings.CIRCUIT_FACTORY:
             circuit_gain = 1
             pollution_gain = 1
-            circuit_gain += self.GetNeighbours(x,y,Buildings.SMELTERY)
+            circuit_gain += self.GetNeighbours(x,y,Buildings.SMELTERY) + self.GetNeighbours(x,y,Building.SUPPLY_LINE_TRUCK)
 
         elif building == Buildings.PARK:
             pollution_gain = -3
@@ -105,7 +121,7 @@ class GameState():
             power_gain = 1 + self.GetNeighbours(x,y,Buildings.EMPTY)
 
         elif building == Buildings.COAL_POWER_PLANT:
-            power_gain = 1 + self.GetNeighbours(x,y,Buildings.OIL_RIG)
+            power_gain = 1 + self.GetNeighbours(x,y,Buildings.OIL_RIG) + self.GetNeighbours(x,y,Buildings.SUPPLY_LINE_TRUCK)
             pollution_gain = 1
 
         elif building == Buildings.OIL_RIG:
@@ -117,7 +133,7 @@ class GameState():
             pollution_gain = 1
 
         elif building == Buildings.SHOP:
-            money_gain = 1 + self.GetNeighbours(x,y,Buildings.CIRCUIT_FACTORY) + self.GetNeighbours(x,y,Buildings.SMELTERY)
+            money_gain = 1 + self.GetNeighbours(x,y,Buildings.CIRCUIT_FACTORY) + self.GetNeighbours(x,y,Buildings.SMELTERY)+ self.GetNeighbours(x,y,Buildings.SUPPLY_LINE_TRUCK)
 
         elif building == Buildings.DEMOMAN_OFFICE:
             pass
@@ -142,11 +158,18 @@ class GameState():
         self.resources['pollution'] += pollution_gain
         self.resources['power'] += power_gain
 
-def Player1Turn():
-    pass
+    def Player1Turn(self):
+        buildingPlayed = ReadCard()
+        buildingX = ReadPositionX()
+        buildingY = ReadPositionY()
+        self.board[buildingX][buildingY] = buildingPlayed
 
-def Player2Turn():
-    pass
+
+    def Player2Turn(self):
+        buildingPlayed = ReadCard()
+        buildingX = ReadPositionX()
+        buildingY = ReadPositionY()
+        self.board[buildingX][buildingY] = buildingPlayed
 
 def EventRandomize():
     pass
@@ -164,9 +187,10 @@ if __name__ == '__main__':
     while True:
         EventRandomize()
 
-        Player1Turn()
+        for i in range(0,2):
+            GAME_STATE.Player1Turn()
 
-        Player2Turn()
+            GAME_STATE.Player2Turn()
 
         EventOccurs()
 
