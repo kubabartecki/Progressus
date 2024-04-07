@@ -67,7 +67,9 @@ def ReadPositionY():
 
 
 class Game():
-    board = SIZE * [SIZE * [Buildings.EMPTY]]
+    board = [[Buildings.EMPTY for i in range(SIZE)] for j in range(SIZE)]
+    
+
     nextEvent = GameEvents.NONE
     state = GameStates.GAME_START
     current_turn = 0
@@ -81,6 +83,9 @@ class Game():
     }
 
     def __init__(self) -> None:
+        # for i, row in enumerate(self.board):
+        #     for  j, _ in enumerate(row):
+        #          self.board[Nonei][j] = Buildings.EMPTY 
         pass
 
     def GetNeighbours(self, x, y, building):
@@ -186,6 +191,8 @@ class Game():
         for x, row in enumerate(self.board):
             for y, _ in enumerate(row): 
                 money_gain, power_gain, fuel_gain, circuit_gain, steel_gain, pollution_gain = self.CalculateBuildingGain(x,y)
+                if pollution_gain >= 1:
+                    print(f"{pollution_gain=}, {x=}, {y=}")
                 total_circuit_gain += circuit_gain
                 total_fuel_gain += fuel_gain
                 total_steel_gain += steel_gain
@@ -204,6 +211,9 @@ class Game():
         for key, value in self.resources.items():
             print(key, ": ", value)
 
+        for i, row in enumerate(self.board):
+            print(row)
+
 
     def EventRandomize(self):
         self.nextEvent = choice(list(GameEvents))
@@ -212,7 +222,8 @@ class Game():
         if self.nextEvent == GameEvents.NONE:
             pass
         elif self.nextEvent == GameEvents.CLEAR_SKY:
-            self.resources['pollution'] -= 1
+            if self.resources['pollution'] > 0:
+                self.resources['pollution'] -= 1
         elif self.nextEvent == GameEvents.LANDSLIDE:
             y = randint(0,SIZE - 1)
             edgeBuilding = self.board[0][y]
@@ -229,9 +240,9 @@ if __name__ == '__main__':
     while True:
         game.EventRandomize()
 
-        for i in range(0,2):
-            game.Player1Turn()
-            game.Player2Turn()
+        # No loop for testing
+        game.Player1Turn()
+        game.Player2Turn()
 
         game.EventOccurs()
 
