@@ -54,6 +54,16 @@ class Events(Enum):
     RABBIT_HOLE = 69
     
 
+def ReadCard():
+    pass
+
+def ReadPositionX():
+    pass
+
+def ReadPositionY():
+    pass
+
+
 class GameState():
     board = [SIZE * [SIZE * [None]]] 
     next_event = None
@@ -139,11 +149,18 @@ class GameState():
         self.resources['pollution'] += pollution_gain
         self.resources['power'] += power_gain
 
-def Player1Turn():
-    pass
+    def Player1Turn():
+        buildingPlayed = ReadCard()
+        buildingX = ReadPositionX()
+        buildingY = ReadPositionY()
+        self.board[X][Y] = buildingPlayed()
 
-def Player2Turn():
-    pass
+
+    def Player2Turn():
+        buildingPlayed = ReadCard()
+        buildingX = ReadPositionX()
+        buildingY = ReadPositionY()
+        self.board[X][Y] = buildingPlayed()
 
 def EventRandomize():
     pass
