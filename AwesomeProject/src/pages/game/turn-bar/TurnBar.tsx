@@ -14,7 +14,7 @@ const TurnBar = () => {
   return (
     <View style={styles.container}>
       <Text style={styles.text}>{`Turn ${TMP_TURN}/${MAX_TURN}`}</Text>
-      <Bar progress={TMP_TURN / MAX_TURN} style={styles.bar}/>
+      <Bar progress={TMP_TURN / MAX_TURN}/>
     </View>
   );
 };
