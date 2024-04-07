@@ -8,6 +8,7 @@ const StartButtons = ({ navigation }) => {
     navigation.navigate('GamePage');
   };
 
+
   return (
     <View style={styles.view}>
       <MyButton

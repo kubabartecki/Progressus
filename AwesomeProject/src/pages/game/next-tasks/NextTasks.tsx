@@ -12,32 +12,8 @@ interface Task {
 
 const TMP_NEXTTASKS_DATA: Task[] = [
   {
-    name: 'Zbierz zasoby',
-    tourDeadline: 3,
-  },
-  {
-    name: 'Napraw piko',
-    tourDeadline: 1,
-  },
-  {
-    name: 'Zbierz Paliwo',
+    name: 'Postaw 7 parków',
     tourDeadline: 20,
-  },
-  {
-    name: 'Zbierz Paliwo',
-    tourDeadline: 1,
-  },
-  {
-    name: 'Zbierz Paliwo',
-    tourDeadline: 1,
-  },
-  {
-    name: 'Zbierz Paliwo',
-    tourDeadline: 1,
-  },
-  {
-    name: 'Zbierz Paliwo',
-    tourDeadline: 1,
   },
 ];
 
