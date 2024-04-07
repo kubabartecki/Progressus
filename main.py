@@ -112,7 +112,7 @@ class GameState():
         elif building == Buildings.CIRCUIT_FACTORY:
             circuit_gain = 1
             pollution_gain = 1
-            circuit_gain += self.GetNeighbours(x,y,Buildings.SMELTERY) + self.GetNeighbours(x,y,Building.SUPPLY_LINE_TRUCK)
+            circuit_gain += self.GetNeighbours(x,y,Buildings.SMELTERY) + self.GetNeighbours(x,y,Buildings.SUPPLY_LINE_TRUCK)
 
         elif building == Buildings.PARK:
             pollution_gain = -3
