@@ -7,7 +7,7 @@ const Home = ({ navigation }) => {
   return (
     <View style={styles.body}>
       <Image
-        source={require('../../../assets/favicon.png')}
+        source={require('../../../assets/LOGO.png')}
         style={styles.logo}
       />
       <StartButtons navigation={navigation}/>
@@ -28,6 +28,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   logo: {
+    width: 100,
+    height: 100,
     marginBottom: 50,
   },
 });

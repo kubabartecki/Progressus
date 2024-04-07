@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   StyleSheet,
   View,
@@ -7,14 +7,14 @@ import {
 
 import { Bar } from 'react-native-progress';
 
-const TurnBar = () => {
-  const MAX_TURN = 10;
-  const [TMP_TURN, setTMP_TURN] = React.useState(4);
+const TurnBar = (props) => {
+  const MAX_TURN = 20;
+  // const [turn, setTurn] = useState(1);
 
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>{`Turn ${TMP_TURN}/${MAX_TURN}`}</Text>
-      <Bar progress={TMP_TURN / MAX_TURN}/>
+      <Text style={styles.text}>{`Tura ${props.turn}/${MAX_TURN}`}</Text>
+      <Bar progress={props.turn / MAX_TURN}/>
     </View>
   );
 };

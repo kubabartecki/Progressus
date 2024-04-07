@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   StyleSheet,
   View,
@@ -9,10 +9,13 @@ import {
 import { Building } from '../../../components/building/Building';
 import { Dimensions } from 'react-native'
 
-const TMP_BUILDING_DATA: number[] = Array(64).fill(1);
+// const TMP_BUILDING_DATA: number[] = Array(64).fill(1);
+interface Props {
+  board: number[];
+}
 
 const numColumns = 8;
-const Board = () => {
+const Board: React.FC<Props> = (props) => {
   // if you know better way to code this let me know
   const buildingNumToReq = (number: number) => {
     switch (number) {
@@ -44,8 +47,13 @@ const Board = () => {
         return require('../../../../assets/buildings/SUPPLY_LINE_AIRPLANE.png');
     }
   }
+  const [board, setBoard] = useState<number[]>([]);
 
-  const buildingData = TMP_BUILDING_DATA.map((item) =>
+  useEffect(() => {
+    setBoard(props.board);
+  }, [props.board]);
+
+  const buildingData = props.board.map((item) =>
     ({ icon:
         <Image
           style={styles.image}
