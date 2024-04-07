@@ -1,65 +1,66 @@
 import json
-from enum import Enum
+from enum import Enum, auto
 from os import get_inheritable
 from types import BuiltinMethodType
 
-SIZE = 12
-
-""" ENUM BUDYNKÓW """
+SIZE = 5
 
 class GameStates(Enum):
-    PLAYER_1_TURN = 2
+    GAME_START = auto()
+    EVENT_RANDOMIZE = auto()
+    PLAYER_1_TURN = auto()
+    PLAYER_2_TURN = auto()
+    EVENT_OCCURS = auto()
+    UPDATE_GAME_STATE = auto()
 
-class Building(Enum):
-    EMPTY = 0
-    CIRCUIT_FACTORY  = 1
-    PARK = 2
-    WINDMILL = 3
-    COAL_POWER_PLANT = 4
-    OIL_RIG = 5
-    SMELTERY = 6
-    SHOP = 7
-    DEMOMAN_OFFICE = 8
-    AIR_CONDITIONER = 9
-    LABORATORY = 10
-    SUPPLY_LINE_TRUCK = 11
-    SUPPLY_LINE_AIRPLANE = 12
+
+class Buildings(Enum):
+    EMPTY = auto()
+    CIRCUIT_FACTORY  = auto()
+    PARK = auto()
+    WINDMILL = auto()
+    COAL_POWER_PLANT = auto()
+    OIL_RIG = auto()
+    SMELTERY = auto()
+    SHOP = auto()
+    DEMOMAN_OFFICE = auto()
+    AIR_CONDITIONER = auto()
+    LABORATORY = auto()
+    SUPPLY_LINE_TRUCK = auto()
+    SUPPLY_LINE_AIRPLANE = auto()
 
 
 class Experts(Enum):
-    ECOLOGIST = 0
-    METALURGIST = 1
-    SCIENCETIST = 2
-    ARCHITECT = 3
-    SOFTWARE_ENGINEER = 4
-    LOGISTICIAN = 5
-    LIAR = 6
-    SENSEI = 7
-    DRIVER = 8
-    DEMOMAN = 9
-    CHEMIST = 10
-    MINER = 11
+    ECOLOGIST = auto()
+    METALURGIST = auto()
+    SCIENCETIST = auto()
+    ARCHITECT = auto()
+    SOFTWARE_ENGINEER = auto()
+    LOGISTICIAN = auto()
+    LIAR = auto()
+    SENSEI = auto()
+    DRIVER = auto()
+    DEMOMAN = auto()
+    CHEMIST = auto()
+    MINER = auto()
 
-class Events(Enum):
-    NONE = 0
-    TSUNAMI = 1
-    LANDSLIDE = 2
-    VOLCANO_ERUPTION = 3
-    STRIKE = 4
-    CLEAR_SKY = 5
-    TORNADO = 6
-    EPIDEMIC = 7
-    TRAFFIC = 8
 
-    RABBIT_HOLE = 69
-    
+class GameEvents(Enum):
+    NONE = auto()
+    TSUNAMI = auto()
+    LANDSLIDE = auto()
+    VOLCANO_ERUPTION = auto()
+    STRIKE = auto()
+    CLEAR_SKY = auto()
+    TORNADO = auto()
+    EPIDEMIC = auto()
+    TRAFFIC = auto()
+
 
 class GameState():
-    board = [SIZE * [SIZE * [None]]] 
-    next_event = None
+    board = [SIZE * [SIZE * [Buildings.EMPTY]]] 
+    state = GameStates.GAME_START
     current_turn = 0
-    player_turn = 0
-    state = 0
     resources = {
         'circuits' : 0,
         'fuel' : 0,
@@ -74,6 +75,8 @@ class GameState():
 
     def GetNeighbours(self, x, y, building):
         n = 0
+        for i in range(3):
+            pass
         return n
 
     
@@ -87,49 +90,49 @@ class GameState():
         pollution_gain = 0
         power_gain = 0
 
-        if building == Building.EMPTY:
+        if building == Buildings.EMPTY:
             pass
 
-        elif building == Building.CIRCUIT_FACTORY:
+        elif building == Buildings.CIRCUIT_FACTORY:
             circuit_gain = 1
             pollution_gain = 1
-            circuit_gain += self.GetNeighbours(x,y,Building.SMELTERY)
+            circuit_gain += self.GetNeighbours(x,y,Buildings.SMELTERY)
 
-        elif building == Building.PARK:
+        elif building == Buildings.PARK:
             pollution_gain = -3
 
-        elif building == Building.WINDMILL:
-            power_gain = 1 + self.GetNeighbours(x,y,Building.EMPTY)
+        elif building == Buildings.WINDMILL:
+            power_gain = 1 + self.GetNeighbours(x,y,Buildings.EMPTY)
 
-        elif building == Building.COAL_POWER_PLANT:
-            power_gain = 1 + self.GetNeighbours(x,y,Building.OIL_RIG)
+        elif building == Buildings.COAL_POWER_PLANT:
+            power_gain = 1 + self.GetNeighbours(x,y,Buildings.OIL_RIG)
             pollution_gain = 1
 
-        elif building == Building.OIL_RIG:
+        elif building == Buildings.OIL_RIG:
             fuel_gain = 1
             pollution_gain = 1
 
-        elif building == Building.SMELTERY:
+        elif building == Buildings.SMELTERY:
             steel_gain = 1
             pollution_gain = 1
 
-        elif building == Building.SHOP:
-            money_gain = 1 + self.GetNeighbours(x,y,Building.CIRCUIT_FACTORY) + self.GetNeighbours(x,y,Building.SMELTERY)
+        elif building == Buildings.SHOP:
+            money_gain = 1 + self.GetNeighbours(x,y,Buildings.CIRCUIT_FACTORY) + self.GetNeighbours(x,y,Buildings.SMELTERY)
 
-        elif building == Building.DEMOMAN_OFFICE:
+        elif building == Buildings.DEMOMAN_OFFICE:
             pass
 
-        elif building == Building.AIR_CONDITIONER:
-            pollution_gain = - self.GetNeighbours(x,y,Building.CIRCUIT_FACTORY) \
-                             - self.GetNeighbours(x,y,Building.COAL_POWER_PLANT) \
-                             - self.GetNeighbours(x,y,Building.OIL_RIG) \
-                             - self.GetNeighbours(x,y,Building.SMELTERY)
+        elif building == Buildings.AIR_CONDITIONER:
+            pollution_gain = - self.GetNeighbours(x,y,Buildings.CIRCUIT_FACTORY) \
+                             - self.GetNeighbours(x,y,Buildings.COAL_POWER_PLANT) \
+                             - self.GetNeighbours(x,y,Buildings.OIL_RIG) \
+                             - self.GetNeighbours(x,y,Buildings.SMELTERY)
 
-        elif building == Building.LABORATORY:
+        elif building == Buildings.LABORATORY:
             pass
-        elif building == Building.SUPPLY_LINE_TRUCK:
+        elif building == Buildings.SUPPLY_LINE_TRUCK:
             pollution_gain = 1
-        elif building == Building.SUPPLY_LINE_AIRPLANE:
+        elif building == Buildings.SUPPLY_LINE_AIRPLANE:
             pollution_gain = 1
 
         self.resources['circuits'] += circuit_gain
