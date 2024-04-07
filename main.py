@@ -169,23 +169,33 @@ class Game():
         self.board[buildingX][buildingY] = buildingPlayed
 
     def UpdateGameState(self):
-        circuit_gain = 0
-        fuel_gain = 0
-        steel_gain = 0
-        money_gain = 0
-        pollution_gain = 0
-        power_gain = 0
+        total_circuit_gain = 0
+        total_fuel_gain = 0
+        total_steel_gain = 0
+        total_money_gain = 0
+        total_pollution_gain = 0
+        total_power_gain = 0
 
         for x, row in enumerate(self.board):
             for y, _ in enumerate(row): 
-                 money_gain, power_gain, fuel_gain, circuit_gain, steel_gain, pollution_gain = self.CalculateBuildingGain(x,y)
+                money_gain, power_gain, fuel_gain, circuit_gain, steel_gain, pollution_gain = self.CalculateBuildingGain(x,y)
+                total_circuit_gain += circuit_gain
+                total_fuel_gain += fuel_gain
+                total_steel_gain += steel_gain
+                total_money_gain = money_gain
+                total_pollution_gain += pollution_gain
+                total_power_gain +=  power_gain
                     
-        self.resources['circuits'] += circuit_gain
-        self.resources['fuel'] += fuel_gain
-        self.resources['steel'] += steel_gain
-        self.resources['money'] += money_gain
-        self.resources['pollution'] += pollution_gain
-        self.resources['power'] += power_gain
+        self.resources['money'] += total_money_gain
+        self.resources['power'] += total_power_gain
+        self.resources['fuel'] += total_fuel_gain
+        self.resources['circuits'] += total_circuit_gain
+        self.resources['steel'] += total_steel_gain
+        self.resources['pollution'] += total_pollution_gain
+
+    def DrawGame(self):
+        for key, value in self.resources.items():
+            print(key, ": ", value)
 
             
 def EventRandomize():
@@ -196,18 +206,22 @@ def EventOccurs():
     pass
 
 
+
+
 if __name__ == '__main__':
-    GAME = Game()
+    game = Game()
+    game.board[0][0] = Buildings.COAL_POWER_PLANT
 
     while True:
-        EventRandomize()
+        # EventRandomize()
 
         for i in range(0,2):
-            GAME.Player1Turn()
-            GAME.Player2Turn()
+            game.Player1Turn()
+            game.Player2Turn()
 
         EventOccurs()
 
-        GAME.UpdateGameState()
+        game.UpdateGameState()
+        game.DrawGame()
 
 
