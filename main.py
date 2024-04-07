@@ -189,9 +189,10 @@ if __name__ == '__main__':
     while True:
         EventRandomize()
 
-        Player1Turn()
+        for i in range(0,2):
+            Player1Turn()
 
-        Player2Turn()
+            Player2Turn()
 
         EventOccurs()
 
